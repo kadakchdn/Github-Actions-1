@@ -1,0 +1,38 @@
+name: Run Selenium Tests on GitHub Actions
+
+on:
+  push:
+    branches:
+      - main  # Runs tests whenever changes are pushed to main branch
+  pull_request:
+
+jobs:
+  selenium-tests:
+    runs-on: ubuntu-latest  # Uses an Ubuntu VM for execution
+
+    steps:
+      - name: Checkout the Repository
+        uses: actions/checkout@v3  # Fetches your code from GitHub
+
+      - name: Set Up Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'  # Use Java 17 or the version your project requires
+
+      - name: Install Maven Dependencies
+        run: mvn install  # Installs all dependencies
+
+      - name: Start Selenium Server (Optional)
+        run: |
+          curl -O https://github.com/SeleniumHQ/selenium/releases/latest/download/selenium-server.jar
+          nohup java -jar selenium-server.jar standalone &  # Runs Selenium Grid in background
+
+      - name: Run Selenium Tests
+        run: mvn test  # Executes your test cases
+
+      - name: Upload Test Reports
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-reports
+          path: target/surefire-reports/  # Uploads test execution reports
