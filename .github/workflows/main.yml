@@ -3,7 +3,7 @@ name: Run Selenium Tests on GitHub Actions
 on:
   push:
     branches:
-      - main  # Runs tests whenever changes are pushed to main branch
+      - master  # Runs tests whenever changes are pushed to main branch
   pull_request:
 
 jobs:
